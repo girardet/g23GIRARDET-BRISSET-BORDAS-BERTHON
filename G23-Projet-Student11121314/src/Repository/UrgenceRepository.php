@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\URGURGENCE;
+use App\Entity\Urgence;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method URGURGENCE|null find($id, $lockMode = null, $lockVersion = null)
- * @method URGURGENCE|null findOneBy(array $criteria, array $orderBy = null)
- * @method URGURGENCE[]    findAll()
- * @method URGURGENCE[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Urgence|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Urgence|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Urgence[]    findAll()
+ * @method Urgence[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class URGURGENCERepository extends ServiceEntityRepository
+class UrgenceRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, URGURGENCE::class);
+        parent::__construct($registry, Urgence::class);
     }
 
     /*

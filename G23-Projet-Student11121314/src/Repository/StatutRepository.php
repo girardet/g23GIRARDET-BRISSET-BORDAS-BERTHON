@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\STATSTATISTIQUE;
+use App\Entity\Statut;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method STATSTATISTIQUE|null find($id, $lockMode = null, $lockVersion = null)
- * @method STATSTATISTIQUE|null findOneBy(array $criteria, array $orderBy = null)
- * @method STATSTATISTIQUE[]    findAll()
- * @method STATSTATISTIQUE[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Statut|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Statut|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Statut[]    findAll()
+ * @method Statut[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class STATSTATISTIQUERepository extends ServiceEntityRepository
+class StatutRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, STATSTATISTIQUE::class);
+        parent::__construct($registry, Statut::class);
     }
 
     /*

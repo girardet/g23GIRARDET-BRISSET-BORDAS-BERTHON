@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\PERSONNEATYPEPROBLEME;
+use App\Entity\Personne;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method PERSONNEATYPEPROBLEME|null find($id, $lockMode = null, $lockVersion = null)
- * @method PERSONNEATYPEPROBLEME|null findOneBy(array $criteria, array $orderBy = null)
- * @method PERSONNEATYPEPROBLEME[]    findAll()
- * @method PERSONNEATYPEPROBLEME[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Personne|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Personne|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Personne[]    findAll()
+ * @method Personne[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PERSONNEATYPEPROBLEMERepository extends ServiceEntityRepository
+class PersonneRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, PERSONNEATYPEPROBLEME::class);
+        parent::__construct($registry, Personne::class);
     }
 
     /*

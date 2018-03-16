@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\INTERVENTION;
+use App\Entity\Intervention;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method INTERVENTION|null find($id, $lockMode = null, $lockVersion = null)
- * @method INTERVENTION|null findOneBy(array $criteria, array $orderBy = null)
- * @method INTERVENTION[]    findAll()
- * @method INTERVENTION[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Intervention|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Intervention|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Intervention[]    findAll()
+ * @method Intervention[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class INTERVENTIONRepository extends ServiceEntityRepository
+class InterventionRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, INTERVENTION::class);
+        parent::__construct($registry, Intervention::class);
     }
 
     /*

@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\POSPOSTE;
+use App\Entity\PersonneATypeProbleme;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method POSPOSTE|null find($id, $lockMode = null, $lockVersion = null)
- * @method POSPOSTE|null findOneBy(array $criteria, array $orderBy = null)
- * @method POSPOSTE[]    findAll()
- * @method POSPOSTE[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method PersonneATypeProbleme|null find($id, $lockMode = null, $lockVersion = null)
+ * @method PersonneATypeProbleme|null findOneBy(array $criteria, array $orderBy = null)
+ * @method PersonneATypeProbleme[]    findAll()
+ * @method PersonneATypeProbleme[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class POSPOSTERepository extends ServiceEntityRepository
+class PersonneATypeProblemeRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, POSPOSTE::class);
+        parent::__construct($registry, PersonneATypeProbleme::class);
     }
 
     /*

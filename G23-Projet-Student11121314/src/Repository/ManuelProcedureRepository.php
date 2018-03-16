@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\MANUELPROCEDURE;
+use App\Entity\ManuelProcedure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method MANUELPROCEDURE|null find($id, $lockMode = null, $lockVersion = null)
- * @method MANUELPROCEDURE|null findOneBy(array $criteria, array $orderBy = null)
- * @method MANUELPROCEDURE[]    findAll()
- * @method MANUELPROCEDURE[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ManuelProcedure|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ManuelProcedure|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ManuelProcedure[]    findAll()
+ * @method ManuelProcedure[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MANUELPROCEDURERepository extends ServiceEntityRepository
+class ManuelProcedureRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, MANUELPROCEDURE::class);
+        parent::__construct($registry, ManuelProcedure::class);
     }
 
     /*

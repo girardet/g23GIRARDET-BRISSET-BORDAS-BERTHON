@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\TYPTYPEPROBLEME;
+use App\Entity\TypeProbleme;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method TYPTYPEPROBLEME|null find($id, $lockMode = null, $lockVersion = null)
- * @method TYPTYPEPROBLEME|null findOneBy(array $criteria, array $orderBy = null)
- * @method TYPTYPEPROBLEME[]    findAll()
- * @method TYPTYPEPROBLEME[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TypeProbleme|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TypeProbleme|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TypeProbleme[]    findAll()
+ * @method TypeProbleme[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TYPTYPEPROBLEMERepository extends ServiceEntityRepository
+class TypeProblemeRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, TYPTYPEPROBLEME::class);
+        parent::__construct($registry, TypeProbleme::class);
     }
 
     /*
