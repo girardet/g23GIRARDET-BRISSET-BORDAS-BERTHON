@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.poste) }}
+    {{ form_row(form.urgence) }}
+	{{ form_row(form.typeProbleme) }}
+    {{ form_row(form.prequalification) }}
+	{{ form_row(form.body) }}
+    {{ form_row(form.attachment) }}
+    {{ form_end(form) }}
+{% endblock %}
