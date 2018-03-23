@@ -31,7 +31,7 @@ class Tickets
     private $typeProbleme;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Personne", inversedBy="tickets")
+    * @ORM\ManyToOne(targetEntity="Personne", inversedBy="ticketsDeposes")
     */
     private $personne;
 
@@ -78,7 +78,6 @@ class Tickets
 
 
 	/**
-	* @var Intervention
     * @ORM\OneToMany(targetEntity="Intervention", mappedBy="tickets")
     */
     private $intervention;

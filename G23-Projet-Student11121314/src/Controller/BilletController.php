@@ -10,28 +10,34 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-/**
-     * @Route("/billet") //add this comment to annotations
-
- */
+use App\Entity\Personne;
+use App\Entity\Tickets;
+use App\Entity\Urgence;
+use App\Entity\Poste;
+use App\Entity\TypeProbleme;
+use App\Entity\Qualification;
+	/**
+    * @Route("/billet") //add this comment to annotations
+	*/
 
 class BilletController extends Controller
 {
 
     /**
-     * @Route("/{id}", name="billet.accueil") 
+     * @Route("/accueil/{id}", name="billet.accueil") 
      * @Template("billets/afficherBillets.html.twig")
      */
 
     public function voirMesBillets(Personne $personne)
     {
     	$em = $this->getDoctrine()->getManager();
-    	$billets = $em->getRepository(Billet::class)->where('id_personne = $personne->id');
+    	$billets = $em->getRepository(Tickets::class)->where('id_personne = $personne->id');
 		$form = formulaireRecherche();
-        return ["form" => $form.form->createView(),"billets" => $billets];
+        return ["form" => $form->createView(),"billets" => $billets];
     }
 
     /**
@@ -42,10 +48,10 @@ class BilletController extends Controller
     public function voirTousLesBillets()
     {
     	$em = $this->getDoctrine()->getManager();
-    	$billets = $em->getRepository(Billet::class)->findAll();
+    	$billets = $em->getRepository(Tickets::class)->findAll();
 		
 		$form = formulaireRecherche(1);
-        return ["form" => $form.form->createView(),"billets" => $billets];
+        return ["form" => $form->createView(),"billets" => $billets];
     }
 
     public function formulaireRecherche($chef = 0)
@@ -63,10 +69,10 @@ class BilletController extends Controller
         "widget" => "single_text"
     	])
 		
-		if($chef != 0)
-		{
+		/*if($chef != 0)
+		{*/
 			->add("nomoperateur", TextType::class)
-		}
+		/*}*/
 		
     	->add("etat", EntityType::class, array(
     		'class' => Etat::class,
@@ -94,17 +100,17 @@ class BilletController extends Controller
     	{
     		$query += "id = ". name;
     	}
-    	if(a la con1 != null && a la con2 !=null)
+    	if(date1 != null && date2 !=null)
     	{
-    		$query += "date_traitement_prevu_ticket between ". a la con1 ." and ". a la con2; 
+    		$query += "date_traitement_prevu_ticket between ". date1 ." and ". date2; 
     	}
-    	else if(a la con1 != null)
+    	else if(date1 != null)
     	{
-    		$query += "date_traitement_prevu_ticket = ". a la con1;
+    		$query += "date_traitement_prevu_ticket = ". date1;
     	}
-    	else if(a la con2 != null)
+    	else if(date2 != null)
     	{
-    		$query += "date_traitement_prevu_ticket = ". a la con2;
+    		$query += "date_traitement_prevu_ticket = ". date2;
     	}
     	if(etat != null)
     	{
@@ -121,9 +127,9 @@ class BilletController extends Controller
 
     	$em = $this->getDoctrine()->getManager();
     	if($query != "")
-    		$billets = $em->getRepository(Billet::class)->where($query);
+    		$billets = $em->getRepository(Tickets::class)->where($query);
     	else
-    		$billets = $em->getRepository(Billet::class)->findAll(); // A CHANGER////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    		$billets = $em->getRepository(Tickets::class)->findAll(); // A CHANGER////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     /**
@@ -132,11 +138,11 @@ class BilletController extends Controller
      */
 
 
-    public function changeUrgence(Billet $Billet, Request $request)
+    public function changeUrgence(Tickets $ticket, Request $request)
     {
     	$em = $this->getDoctrine()->getManager();
-    	$billet = $em->getRepository(Billet::class)->find($id);
-        $billet->etatbillet = $request[truc];
+    	$ticket = $em->getRepository(Tickets::class)->find($id);
+        $ticket->etatbillet = $request[truc];
         return $this->redirecToRoute("billet.accueil");
     }
 
@@ -144,11 +150,11 @@ class BilletController extends Controller
      * @Route("/changerdateresolution/{id}", name="billet.date") 
      */
 
-    public function changeDateResolution(Billet $Billet, Request $request)
+    public function changeDateResolution(Tickets $ticket, Request $request)
     {
     	$em = $this->getDoctrine()->getManager();
-    	$billet = $em->getRepository(Billet::class)->find($id);
-        $billet->dateresolution = $request[truc];
+    	$ticket = $em->getRepository(Billet::class)->find($id);
+        $ticket->dateresolution = $request[truc];
         return $this->redirecToRoute("billet.accueil");
     }
 
@@ -157,7 +163,7 @@ class BilletController extends Controller
 	 * @Template("billets/changerUrgenceBillet.html.twig")
      */
 
-    public function chargerVueUrgence(Billet $Billet, Request $request)
+    public function chargerVueUrgence(Tickets $ticket, Request $request)
     {
     	$em = $this->getDoctrine()->getManager();
     	$urgences = $em->getRepository(Urgence::class)->findAll();
@@ -183,7 +189,7 @@ class BilletController extends Controller
 	 * @Template("billets/assigner.html.twig")
      */
 
-    public function chargerVueAssigner(Billet $Billet, Request $request)
+    public function chargerVueAssigner(Tickets $ticket, Request $request)
     {
     	$em = $this->getDoctrine()->getManager();
     	$operateurs = $em->getRepository(Operateur::class)->findAll();
@@ -209,12 +215,12 @@ class BilletController extends Controller
 	 * @Template("billets/commentaire.html.twig")
      */
 
-    public function chargerVueCommentaire(Billet $Billet, Request $request)
+    public function chargerVueCommentaire(Tickets $ticket, Request $request)
     {
    	    $form = $this->createFormBuilder()
     	->add('body', TextareaType::class, array(
     	'attr' => array('class' => 'textarea'),
-		));
+		))
     	->add("save", SubmitType::class, ["label" => "Commenter"])
     	->getForm();
 
@@ -231,7 +237,7 @@ class BilletController extends Controller
 	 * @Template("billets/date.html.twig")
      */
 
-    public function chargerVuePrevoirDate(Billet $Billet, Request $request)
+    public function chargerVuePrevoirDate(Tickets $ticket, Request $request)
     {
    	    $form = $this->createFormBuilder()
     	 ->add("a la con", DateType::class, [
@@ -253,7 +259,7 @@ class BilletController extends Controller
 	 * @Template("billets/intervention.html.twig")
      */
 
-    public function chargerVuePrevoirDateIntervention(Billet $Billet, Request $request)
+    public function chargerVuePrevoirDateIntervention(Tickets $ticket, Request $request)
     {
    	    $form = $this->createFormBuilder()
     	 ->add("a la con", DateType::class, [
@@ -275,16 +281,16 @@ class BilletController extends Controller
 	 * @Template("billets/deposer.html.twig")
      */
 
-    public function deposer(Billet $Billet, Request $request)
+    public function deposer(Request $request)
     {
     	$em = $this->getDoctrine()->getManager();
     	$postes = $em->getRepository(Poste::class)->findAll();
     	$urgences = $em->getRepository(Urgence::class)->findAll();
     	$typesproblemes = $em->getRepository(TypeProbleme::class)->findAll();
-    	$prequalifications = $em->getRepository(Prequalification::class)->findAll();
+    	$prequalifications = $em->getRepository(Qualification::class)->findAll();
 
    	    $form = $this->createFormBuilder()
-    	-->add("poste", EntityType::class, array(
+    	->add("poste", EntityType::class, array(
     		'class' => Poste::class,
 			'choice_label' => 'code_poste',
     	))
@@ -298,17 +304,17 @@ class BilletController extends Controller
 			'choice_label' => 'libelle_type',
     	))
     	->add("prequalification", EntityType::class, array(
-    		'class' => Prequalification::class,
-			'choice_label' => 'libelle_prequalification',
+    		'class' => Qualification::class,
+			'choice_label' => 'libelle_qualification',
     	))
 
 		->add('body', TextareaType::class, array(
     	'attr' => array('class' => 'textarea'),
-		));
+		))
 
 		->add('attachment', FileType::class, array(
 		 'multiple' => 'true',
-		));
+		))
     	->getForm();
 
       $result = [];

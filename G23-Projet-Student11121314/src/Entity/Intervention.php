@@ -17,21 +17,16 @@ class Intervention
     private $id;
 
     // add your own fields
-
-
-     /**
-    * @ORM\Column(type="integer")
+	/**
     * @ORM\ManyToOne(targetEntity="ManuelProcedure",inversedBy="intervention")
     */
     private $procedure;
 
     /**
-    * @ORM\Column(type="integer")
     * @ORM\ManyToOne(targetEntity="Tickets",inversedBy="intervention")
     */
     private $tickets;
-
-
+	
 	/**
 	* @ORM\Column(type="datetime")
 	*/

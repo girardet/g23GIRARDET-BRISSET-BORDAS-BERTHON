@@ -25,7 +25,7 @@ class TypeProbleme
 	private $libelle_type;
 
 	/**
-    * @ORM\OneToMany(targetEntity="Tickets", mappedBy="type")
+    * @ORM\OneToMany(targetEntity="Tickets", mappedBy="typeProbleme")
     */
 	private $tickets;
 	

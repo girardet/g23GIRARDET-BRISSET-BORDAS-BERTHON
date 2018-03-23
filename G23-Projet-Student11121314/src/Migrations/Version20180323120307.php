@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20180316102327 extends AbstractMigration
+class Version20180323120307 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -16,7 +16,11 @@ class Version20180316102327 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('CREATE TABLE manuel_procedure (id INTEGER NOT NULL, nom_procedure CLOB NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE valeur_statistique (id INTEGER NOT NULL, ticket INTEGER NOT NULL, statistique INTEGER NOT NULL, champ1 INTEGER NOT NULL, champ2 INTEGER NOT NULL, valeur_stat INTEGER NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE valeur_statistique (id INTEGER NOT NULL, tickets_id INTEGER DEFAULT NULL, statistique_id INTEGER DEFAULT NULL, champ1_id INTEGER DEFAULT NULL, champ2_id INTEGER DEFAULT NULL, valeur_stat INTEGER NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_593A86318FDC0E9A ON valeur_statistique (tickets_id)');
+        $this->addSql('CREATE INDEX IDX_593A863176A81463 ON valeur_statistique (statistique_id)');
+        $this->addSql('CREATE INDEX IDX_593A863131072A3D ON valeur_statistique (champ1_id)');
+        $this->addSql('CREATE INDEX IDX_593A863123B285D3 ON valeur_statistique (champ2_id)');
         $this->addSql('CREATE TABLE type_probleme (id INTEGER NOT NULL, libelle_type CLOB NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE etat (id INTEGER NOT NULL, libelle_etat CLOB NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE champs (id INTEGER NOT NULL, nom_champ CLOB NOT NULL, PRIMARY KEY(id))');
@@ -33,6 +37,9 @@ class Version20180316102327 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_54469DF4A0905086 ON tickets (poste_id)');
         $this->addSql('CREATE INDEX IDX_54469DF45E7BB031 ON tickets (personne_assignee_id)');
         $this->addSql('CREATE INDEX IDX_54469DF4578B7FBD ON tickets (urgence_id)');
+        $this->addSql('CREATE TABLE intervention (id INTEGER NOT NULL, procedure_id INTEGER DEFAULT NULL, tickets_id INTEGER DEFAULT NULL, date_intervention DATETIME NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_D11814AB1624BCD2 ON intervention (procedure_id)');
+        $this->addSql('CREATE INDEX IDX_D11814AB8FDC0E9A ON intervention (tickets_id)');
         $this->addSql('CREATE TABLE commente_ticket (id INTEGER NOT NULL, personne_id INTEGER DEFAULT NULL, tickets_id INTEGER DEFAULT NULL, texte_commente CLOB NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_89ED6785A21BD112 ON commente_ticket (personne_id)');
         $this->addSql('CREATE INDEX IDX_89ED67858FDC0E9A ON commente_ticket (tickets_id)');
@@ -41,21 +48,6 @@ class Version20180316102327 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_B712F0CEC54C8C93 ON qualification (type_id)');
         $this->addSql('CREATE TABLE urgence (id INTEGER NOT NULL, libelle_urgence CLOB NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE poste (id INTEGER NOT NULL, code_poste CLOB NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('DROP TABLE chamchamps');
-        $this->addSql('DROP TABLE manuelprocedure');
-        $this->addSql('DROP TABLE personneatypeprobleme');
-        $this->addSql('DROP TABLE personnecommenteticket');
-        $this->addSql('DROP TABLE perspersonne');
-        $this->addSql('DROP TABLE posposte');
-        $this->addSql('DROP TABLE stastatut');
-        $this->addSql('DROP TABLE statstatistique');
-        $this->addSql('DROP TABLE ticktickets');
-        $this->addSql('DROP TABLE typtypeprobleme');
-        $this->addSql('DROP TABLE urgurgence');
-        $this->addSql('DROP TABLE valeurstatistique');
-        $this->addSql('ALTER TABLE intervention ADD COLUMN procedure INTEGER NOT NULL');
-        $this->addSql('ALTER TABLE intervention ADD COLUMN tickets INTEGER NOT NULL');
-        $this->addSql('ALTER TABLE intervention ADD COLUMN date_intervention DATETIME NOT NULL');
     }
 
     public function down(Schema $schema)
@@ -63,18 +55,6 @@ class Version20180316102327 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
-        $this->addSql('CREATE TABLE chamchamps (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE manuelprocedure (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE personneatypeprobleme (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE personnecommenteticket (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE perspersonne (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE posposte (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE stastatut (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE statstatistique (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE ticktickets (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE typtypeprobleme (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE urgurgence (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE valeurstatistique (id INTEGER NOT NULL, PRIMARY KEY(id))');
         $this->addSql('DROP TABLE manuel_procedure');
         $this->addSql('DROP TABLE valeur_statistique');
         $this->addSql('DROP TABLE type_probleme');
@@ -84,15 +64,11 @@ class Version20180316102327 extends AbstractMigration
         $this->addSql('DROP TABLE personne');
         $this->addSql('DROP TABLE statut');
         $this->addSql('DROP TABLE tickets');
+        $this->addSql('DROP TABLE intervention');
         $this->addSql('DROP TABLE commente_ticket');
         $this->addSql('DROP TABLE statistique');
         $this->addSql('DROP TABLE qualification');
         $this->addSql('DROP TABLE urgence');
         $this->addSql('DROP TABLE poste');
-        $this->addSql('CREATE TEMPORARY TABLE __temp__intervention AS SELECT id FROM intervention');
-        $this->addSql('DROP TABLE intervention');
-        $this->addSql('CREATE TABLE intervention (id INTEGER NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('INSERT INTO intervention (id) SELECT id FROM __temp__intervention');
-        $this->addSql('DROP TABLE __temp__intervention');
     }
 }

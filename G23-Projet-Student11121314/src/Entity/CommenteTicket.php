@@ -24,7 +24,7 @@ class CommenteTicket
     private $personne;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Tickets", inversedBy="commentaires")
+    * @ORM\ManyToOne(targetEntity="Tickets", inversedBy="commente_Ticket")
     */
     private $tickets;
 

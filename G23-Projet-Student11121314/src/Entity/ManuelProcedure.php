@@ -24,7 +24,6 @@ class ManuelProcedure
     private $nom_procedure;
 
     /**
-	* @var Intervention
     * @ORM\OneToMany(targetEntity="Intervention",mappedBy="procedure")
     */
     private $intervention;

@@ -19,25 +19,21 @@ class ValeurStatistique
     // add your own fields
 
     /**
-    * @ORM\Column(type="integer")
-    * @ORM\ManyToOne(targetEntity="Ticket", inversedBy="valeurStatistique")
+    * @ORM\ManyToOne(targetEntity="Tickets", inversedBy="valeurStatistique")
     */
-    private $ticket;
+    private $tickets;
 
     /**
-    * @ORM\Column(type="integer")
     * @ORM\ManyToOne(targetEntity="Statistique",inversedBy="valeurStatistique")
     */
     private $statistique;
 
         /**
-    * @ORM\Column(type="integer")
     * @ORM\ManyToOne(targetEntity="Champs",inversedBy="valeurStatistique1")
     */
     private $champ1;
         
         /**
-    * @ORM\Column(type="integer")
     * @ORM\ManyToOne(targetEntity="Champs", inversedBy="valeurStatistique2")
     */
     private $champ2;

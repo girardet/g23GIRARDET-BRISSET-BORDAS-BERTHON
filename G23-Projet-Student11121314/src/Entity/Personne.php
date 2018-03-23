@@ -44,14 +44,14 @@ class Personne
     private $statistique;
 
     /**
-    * @ORM\OneToMany(targetEntity="Tickets", mappedBy="tickets")
+    * @ORM\OneToMany(targetEntity="Tickets", mappedBy="personne")
     */
     private $ticketsDeposes;
 
     /**
-    * @ORM\OneToMany(targetEntity="Tickets",mappedBy="ticketsAssignee")
+    * @ORM\OneToMany(targetEntity="Tickets",mappedBy="personneAssignee")
     */
-    private $ticketsAssignes;
+    private $ticketsAssignee;
 	
 	 /**
     * @ORM\OneToMany(targetEntity="CommenteTicket", mappedBy="personne")
