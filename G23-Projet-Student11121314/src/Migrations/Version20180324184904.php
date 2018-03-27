@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20180323120307 extends AbstractMigration
+class Version20180324184904 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,7 +27,7 @@ class Version20180323120307 extends AbstractMigration
         $this->addSql('CREATE TABLE personne_atype_probleme (id INTEGER NOT NULL, type_probleme_id INTEGER DEFAULT NULL, personne_id INTEGER DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_5114A96DD61980F ON personne_atype_probleme (type_probleme_id)');
         $this->addSql('CREATE INDEX IDX_5114A96A21BD112 ON personne_atype_probleme (personne_id)');
-        $this->addSql('CREATE TABLE personne (id INTEGER NOT NULL, statut_id INTEGER DEFAULT NULL, nom_personne CLOB NOT NULL, login_personne CLOB NOT NULL, password_personne CLOB NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE personne (id INTEGER NOT NULL, statut_id INTEGER DEFAULT NULL, nom_personne CLOB NOT NULL, email CLOB NOT NULL, username CLOB NOT NULL, password_personne CLOB NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_FCEC9EFF6203804 ON personne (statut_id)');
         $this->addSql('CREATE TABLE statut (id INTEGER NOT NULL, libelle_statut CLOB NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE tickets (id INTEGER NOT NULL, etat_id INTEGER DEFAULT NULL, type_probleme_id INTEGER DEFAULT NULL, personne_id INTEGER DEFAULT NULL, poste_id INTEGER DEFAULT NULL, personne_assignee_id INTEGER DEFAULT NULL, urgence_id INTEGER DEFAULT NULL, date_traitement_prevu_ticket DATETIME NOT NULL, chemin_piece_jointe_ticket CLOB NOT NULL, texte_probleme_ticket CLOB NOT NULL, date_resolution DATETIME NOT NULL, date_creation DATETIME NOT NULL, PRIMARY KEY(id))');

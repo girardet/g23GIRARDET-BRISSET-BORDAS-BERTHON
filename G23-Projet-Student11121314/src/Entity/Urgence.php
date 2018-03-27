@@ -45,7 +45,7 @@ class Urgence
 		return $this->id;
 	}
 
-	public function getLibelle_urgence()
+	public function getLibelleUrgence()
 	{
 		return $this->libelle_urgence;
 	}

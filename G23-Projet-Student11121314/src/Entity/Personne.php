@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PersonneRepository")
  */
-class Personne
+class Personne implements UserInterface,UserLoaderInterface,EquatableInterface
 {
     /**
      * @ORM\Id
@@ -27,11 +30,16 @@ class Personne
 	* @ORM\Column(type="text", length=50)
 	*/
     private $nom_personne;
+	
+	/**
+	* @ORM\Column(type="text", length=255)
+	*/
+    private $email;
 
     /**
 	* @ORM\Column(type="text", length=50)
 	*/
-    private $login_personne;
+    private $username;
 
     /**
 	* @ORM\Column(type="text", length=50)
@@ -62,6 +70,17 @@ class Personne
     * @ORM\OneToMany(targetEntity="PersonneATypeProbleme", mappedBy="personne")
     */
     private $competence;
+	
+	
+	public function getEmail()
+	{
+		return $this->email;
+	}
+
+	public function setEmail($email)
+	{
+		$this->email = $email;
+	}
 	
 	public function getCompetence()
 	{
@@ -98,42 +117,47 @@ class Personne
 		return $this->id;
 	}
 
-    public function getId_statut()
+    public function getStatut()
 	{
 		return $this->statut;
 	}
 
-	public function setId_statut($statut)
+	public function setStatut($statut)
 	{
 		$this->statut = $statut;
 	}
 
-	public function getNom_personne()
+	public function getNomPersonne()
 	{
 		return $this->nom_personne;
 	}
 
-	public function setNom_personne($nom_personne)
+	public function setNomPersonne($nom_personne)
 	{
 		$this->nom_personne = $nom_personne;
 	}
 
-	public function getLogin_personne()
+	public function getUsername()
 	{
-		return $this->login_personne;
+		return $this->username;
 	}
 
-	public function setLogin_personne($login_personne)
+	public function setUsername($username)
 	{
-		$this->login_personne = $login_personne;
+		$this->username = $username;
 	}
 
-	public function getPassword_personne()
+	public function getPasswordPersonne()
 	{
 		return $this->password_personne;
 	}
-
-	public function setPassword_personne($password_personne)
+	
+	public function getPassword()
+	{
+		return $this->password_personne;
+	}
+	
+	public function setPasswordPersonne($password_personne)
 	{
 		$this->password_personne = $password_personne;
 	}
@@ -157,5 +181,48 @@ class Personne
 	{
 		$this->ticketsAssignes = $ticketsAssignes;
 	}
+	
+	    public function addRole($role) {
+        $this->roles[] = $role;
+    }
+    
+    public function removeRole($role) {
+        $index = array_search($role, $this->roles, true);
+        if ($index !== false) {
+            array_splice($this->roles, $index, 1);
+        }
+    }
+	public function getSalt(){
+		return null;
+	}
+	
+	public function eraseCredentials() {
+        $this->password_personne=null;
+    }
+	public function loadUserByUsername($username){
+    return $this->createQueryBuilder('u')
+        ->where('u.username = :username OR u.email = :email')
+        ->setParameter('username', $username)
+        ->setParameter('email', $username)
+        ->getQuery()
+        ->getOneOrNullResult();
+	}
+	public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+	public function isEqualTo(UserInterface $user)
+	    {
+	        if ($this->password_personne !== $user->getPasswordPersonne()) {
+	            return false;
+	        }
+
+	        if ($this->username !== $user->getUsername()) {
+	            return false;
+	        }
+
+	        return true;
+	    }
 
 }

@@ -43,12 +43,12 @@ class Poste
 		return $this->id;
 	}
 
-	public function getCode_postal()
+	public function getCodePoste()
 	{
 		return $this->code_poste;
 	}
 
-	public function setCode_postal($code_poste)
+	public function setCodePoste($code_poste)
 	{
 		$this->code_poste = $code_poste;
 	}

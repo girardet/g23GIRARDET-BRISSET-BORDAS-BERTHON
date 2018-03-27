@@ -18,61 +18,60 @@ use App\Entity\Personne;
 use App\Entity\Tickets;
 use App\Entity\Urgence;
 use App\Entity\Poste;
+use App\Entity\Etat;
 use App\Entity\TypeProbleme;
 use App\Entity\Qualification;
+use App\Entity\Statut;
 	/**
     * @Route("/billet") //add this comment to annotations
 	*/
 
 class BilletController extends Controller
 {
+	
 
+	
+	/**
+     * @Route("/addPoste", name="billet.postage") 
+     */
+	 public function addPoste()
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	$urgence = new Statut();
+		$urgence->setLibelle_statut("Client");
+		
+		$urgence1 = new Statut();
+		$urgence1->setLibelle_statut("Opérateur");
+		
+		$urgence2 = new Statut();
+		$urgence2->setLibelle_statut("Chef de Service");
+		
+         $em->persist($urgence);
+		 $em->persist($urgence1);
+		 $em->persist($urgence2);
+         $em->flush();
+    }
+	
     /**
      * @Route("/accueil/{id}", name="billet.accueil") 
      * @Template("billets/afficherBillets.html.twig")
      */
 
-    public function voirMesBillets(Personne $personne)
+    public function voirMesBillets(Personne $personne,Request $request)
     {
     	$em = $this->getDoctrine()->getManager();
     	$billets = $em->getRepository(Tickets::class)->where('id_personne = $personne->id');
-		$form = formulaireRecherche();
-        return ["form" => $form->createView(),"billets" => $billets];
-    }
-
-    /**
-     * @Route("/tous/lesbillets", name="billet.tousbilletsaccueil") 
-     * @Template("billets/afficherBillets.html.twig")
-     */
-
-    public function voirTousLesBillets()
-    {
-    	$em = $this->getDoctrine()->getManager();
-    	$billets = $em->getRepository(Tickets::class)->findAll();
-		
-		$form = formulaireRecherche(1);
-        return ["form" => $form->createView(),"billets" => $billets];
-    }
-
-    public function formulaireRecherche($chef = 0)
-    {
-    	$em = $this->getDoctrine()->getManager();
-    	$etats = $em->getRepository(Etat::class)->findAll();
+				$etats = $em->getRepository(Etat::class)->findAll();
     	$urgences = $em->getRepository(Urgence::class)->findAll();
 
     	$form = $this->createFormBuilder()
     	->add("name", TextType::class)
-    	 ->add("a la con1", DateType::class, [
+    	 ->add("date1", DateType::class, [
         "widget" => "single_text"
     	])
-    	 ->add("a la con2", DateType::class, [
+    	 ->add("date2", DateType::class, [
         "widget" => "single_text"
     	])
-		
-		/*if($chef != 0)
-		{*/
-			->add("nomoperateur", TextType::class)
-		/*}*/
 		
     	->add("etat", EntityType::class, array(
     		'class' => Etat::class,
@@ -89,34 +88,76 @@ class BilletController extends Controller
       $form->handleRequest($request);
       if ($form->isSubmitted() && $form->isValid()) {
           $result = $form->getData();
-      }
-      return ["form" => $form->createView(), "result" => $result];
+
+	  }
+        return ["form" => $form->createView(),"billets" => $billets];
     }
 
-    public function rechercher()
+    /**
+     * @Route("/tous/lesbillets", name="billet.tousbilletsaccueil") 
+     * @Template("billets/afficherBillets.html.twig")
+     */
+
+    public function voirTousLesBillets(Request $request)
     {
-    	$query = "";
-    	if(name != "")
+    	$em = $this->getDoctrine()->getManager();
+    	$billets = $em->getRepository(Tickets::class)->findAll();
+		$etats = $em->getRepository(Etat::class)->findAll();
+    	$urgences = $em->getRepository(Urgence::class)->findAll();
+
+    	$form = $this->createFormBuilder()
+    	->add("name", TextType::class)
+    	 ->add("date1", DateType::class, [
+        "widget" => "single_text"
+    	])
+    	 ->add("date2", DateType::class, [
+        "widget" => "single_text"
+    	])
+		
+		->add("nomoperateur", TextType::class)
+		
+    	->add("etat", EntityType::class, array(
+    		'class' => Etat::class,
+			'choice_label' => 'libelle_etat',
+    	))
+    	->add("urgence", EntityType::class, array(
+    		'class' => Urgence::class,
+			'choice_label' => 'libelle_urgence',
+    	))
+    	->add("recherche", SubmitType::class, ["label" => "Changer urgence"])
+    	->getForm();
+		
+	  $result = [];
+      $form->handleRequest($request);
+      if ($form->isSubmitted() && $form->isValid()) {
+          $result = $form->getData();
+	  }
+        return ["form" => $form->createView(),"billets" => $billets];
+    }
+
+    public function rechercher($name,$date1,$date2,$etat,$urgence)
+    {
+    	if($name != "")
     	{
     		$query += "id = ". name;
     	}
-    	if(date1 != null && date2 !=null)
+    	if($date1 != null && date2 !=null)
     	{
     		$query += "date_traitement_prevu_ticket between ". date1 ." and ". date2; 
     	}
-    	else if(date1 != null)
+    	else if($date1 != null)
     	{
     		$query += "date_traitement_prevu_ticket = ". date1;
     	}
-    	else if(date2 != null)
+    	else if($date2 != null)
     	{
     		$query += "date_traitement_prevu_ticket = ". date2;
     	}
-    	if(etat != null)
+    	if($etat != null)
     	{
     		$query += "id_etat = ". etat;
     	}
-    	if(urgence != null)
+    	if($urgence != null)
     	{
     		$query += "id_urgence = ". urgence;
     	}
@@ -132,31 +173,6 @@ class BilletController extends Controller
     		$billets = $em->getRepository(Tickets::class)->findAll(); // A CHANGER////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
-    /**
-     * @Route("/changerUrgence/{id}", name="billet.urgence")
-	 
-     */
-
-
-    public function changeUrgence(Tickets $ticket, Request $request)
-    {
-    	$em = $this->getDoctrine()->getManager();
-    	$ticket = $em->getRepository(Tickets::class)->find($id);
-        $ticket->etatbillet = $request[truc];
-        return $this->redirecToRoute("billet.accueil");
-    }
-
-     /**
-     * @Route("/changerdateresolution/{id}", name="billet.date") 
-     */
-
-    public function changeDateResolution(Tickets $ticket, Request $request)
-    {
-    	$em = $this->getDoctrine()->getManager();
-    	$ticket = $em->getRepository(Billet::class)->find($id);
-        $ticket->dateresolution = $request[truc];
-        return $this->redirecToRoute("billet.accueil");
-    }
 
      /**
      * @Route("/vueUrgence/{id}", name="billet.vueurgence") 
@@ -180,6 +196,12 @@ class BilletController extends Controller
       $form->handleRequest($request);
       if ($form->isSubmitted() && $form->isValid()) {
           $result = $form->getData();
+          $em = $this->getDoctrine()->getManager();
+    	  $ticket = $em->getRepository(Tickets::class)->find($id);
+          $ticket->setetat($result['urgence']);
+ 		  $em->persist($ticket);
+		  $em->flush();
+		  return $this->redirecToRoute("billet.accueil");
       }
       return ["form" => $form->createView(), "result" => $result];
     }
@@ -206,6 +228,12 @@ class BilletController extends Controller
       $form->handleRequest($request);
       if ($form->isSubmitted() && $form->isValid()) {
           $result = $form->getData();
+          $em = $this->getDoctrine()->getManager();
+    	  $ticket = $em->getRepository(Tickets::class)->find($id);
+          $ticket->setPersonne_Assignee($result['personne']);
+ 		  $em->persist($ticket);
+		  $em->flush();
+		  return $this->redirecToRoute("billet.accueil");
       }
       return ["form" => $form->createView(), "result" => $result];
     }
@@ -228,6 +256,12 @@ class BilletController extends Controller
       $form->handleRequest($request);
       if ($form->isSubmitted() && $form->isValid()) {
           $result = $form->getData();
+          $em = $this->getDoctrine()->getManager();
+    	  $ticket = $em->getRepository(Tickets::class)->find($id);
+          $ticket->commentaires->add($result['body']);
+ 		  $em->persist($ticket);
+		  $em->flush();
+		  return $this->redirecToRoute("billet.accueil");
       }
       return ["form" => $form->createView(), "result" => $result];
     }
@@ -240,7 +274,7 @@ class BilletController extends Controller
     public function chargerVuePrevoirDate(Tickets $ticket, Request $request)
     {
    	    $form = $this->createFormBuilder()
-    	 ->add("a la con", DateType::class, [
+    	 ->add("date", DateType::class, [
         "widget" => "single_text"
     	])
     	->add("changeDateResolution", SubmitType::class, ["label" => "Prévoir une date"])
@@ -250,6 +284,12 @@ class BilletController extends Controller
       $form->handleRequest($request);
       if ($form->isSubmitted() && $form->isValid()) {
           $result = $form->getData();
+          $em = $this->getDoctrine()->getManager();
+    	  $ticket = $em->getRepository(Tickets::class)->find($id);
+          $ticket->setdate($result['date']);
+ 		  $em->persist($ticket);
+		  $em->flush();
+		  return $this->redirecToRoute("billet.accueil");
       }
       return ["form" => $form->createView(), "result" => $result];
     }
@@ -262,7 +302,7 @@ class BilletController extends Controller
     public function chargerVuePrevoirDateIntervention(Tickets $ticket, Request $request)
     {
    	    $form = $this->createFormBuilder()
-    	 ->add("a la con", DateType::class, [
+    	 ->add("date", DateType::class, [
         "widget" => "single_text"
     	])
     	->add("save", SubmitType::class, ["label" => "Prévoir une intervention"])
@@ -272,6 +312,12 @@ class BilletController extends Controller
       $form->handleRequest($request);
       if ($form->isSubmitted() && $form->isValid()) {
           $result = $form->getData();
+          $em = $this->getDoctrine()->getManager();
+    	  $ticket = $em->getRepository(Tickets::class)->find($id);
+          $ticket->setdate($result['date']);
+ 		  $em->persist($ticket);
+		  $em->flush();
+		  return $this->redirecToRoute("billet.accueil");
       }
       return ["form" => $form->createView(), "result" => $result];
     }
@@ -315,12 +361,23 @@ class BilletController extends Controller
 		->add('attachment', FileType::class, array(
 		 'multiple' => 'true',
 		))
+		->add("deposer", SubmitType::class, ["label" => "Deposer"])
     	->getForm();
 
       $result = [];
       $form->handleRequest($request);
       if ($form->isSubmitted() && $form->isValid()) {
           $result = $form->getData();
+          $ticket = new Tickets();
+          $ticket->setPoste($result['poste']);
+          $ticket->setUrgence($result['Urgence']);
+          $ticket->settypeProbleme($result['typeProbleme']);
+          $ticket->setqualification($result['Qualification']);
+          $ticket->setCommentaire($result['body']);
+          $ticket->setattachment($result['attachment']);
+          $ticket->setpersonnedepose($this->getUser());
+          $em->persist($ticket);
+		  $em->flush();
       }
       return ["form" => $form->createView(), "result" => $result];
     }

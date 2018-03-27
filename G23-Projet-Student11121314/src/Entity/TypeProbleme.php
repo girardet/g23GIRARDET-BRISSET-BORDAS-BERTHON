@@ -63,12 +63,12 @@ class TypeProbleme
 		return $this->id;
 	}
 
-	public function getLibelle_type()
+	public function getLibelletype()
 	{
 		return $this->libelle_type;
 	}
 
-	public function setLibelle_type($libelle_type)
+	public function setLibelletype($libelle_type)
 	{
 		$this->libelle_type = $libelle_type;
 	}

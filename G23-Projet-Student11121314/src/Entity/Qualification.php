@@ -33,12 +33,12 @@ class Qualification
         return $this->id;
     }
 
-    public function getPrequalification()
+    public function getLibelleQualification()
     {
         return $this->nom_prequalification;
     }
 
-    public function setPrequalification($nom_prequalification)
+    public function setLibelleQualification($nom_prequalification)
     {
         $this->nom_prequalification= $nom_prequalification;
     }
